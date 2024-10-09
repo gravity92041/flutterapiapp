@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'main.dart'; // Импортируем главный экран
 import 'registration_screen.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -25,9 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (response.statusCode == 200) {
+
       final data = jsonDecode(response.body);
+
       if (data['Auth'] == 'Fine') {
-        print("Fine got");
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        // await prefs.setString('username', _usernameController.text);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

@@ -3,16 +3,15 @@ import 'package:flutterapiapp/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'game_details_screen.dart'; // Импортируем экран с деталями
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  // runApp(GameSearchApp(username: '',));
   runApp(GameSearchApp());
 
 }
 
 class GameSearchApp extends StatelessWidget {
-  // final String username;
-  // GameSearchApp({required this.username});
+  ;
   @override
   Widget build(BuildContext context) {
 
