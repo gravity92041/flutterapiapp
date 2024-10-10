@@ -88,35 +88,66 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.lightBlueAccent,
+              Colors.blueAccent,
+            ],
+          ),
+        ),
+        child: Center( // Центрируем содержимое
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Card( // Используем Card для эффекта окна
+              elevation: 8, // Эффект тени
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20), // Закругленные углы
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0), // Внутренний отступ
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // Сжимаем колонку по содержимому
+                  children: [
+                    TextField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 16), // Отступ между полями
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 20), // Отступ перед кнопкой
+                    ElevatedButton(
+                      onPressed: _login,
+                      child: Text('Login'),
+                    ),
+                    SizedBox(height: 10), // Отступ между кнопками
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                        );
+                      },
+                      child: Text('Register'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              child: Text('Login'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegistrationScreen()),
-                );
-              },
-              child: Text('Register'),
-            ),
-          ],
+          ),
         ),
       ),
     );

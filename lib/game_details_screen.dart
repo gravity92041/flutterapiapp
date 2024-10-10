@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'deal_detail_screen.dart';
 
 class GameDetailsScreen extends StatefulWidget {
   final String gameId;
@@ -77,7 +78,18 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                   final deal = _gameDetails!['deals'][index];
                   return ListTile(
                     title: Text('Price: \$${deal['price']}'),
-                    subtitle: Text('Retail Price: \$${deal['retailPrice']} (Savings: ${deal['savings']}%)'),
+                    subtitle: Text(
+                        'Retail Price: \$${deal['retailPrice']} (Savings: ${deal['savings']}%)'),
+                    onTap: () {
+                      // Переход на экран с деталями сделки
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DealDetailsScreen(dealId: deal['dealID']),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
