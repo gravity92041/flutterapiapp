@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';  // Import Firestore
+
 class RegistrationScreen extends StatefulWidget {
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
@@ -12,14 +14,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-
-
   Future<void> _register() async {
     try {
+      // Firebase Authentication registration
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _usernameController.text,
         password: _passwordController.text,
       );
+
+      // Add the user to Firestore after successful registration
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid).set({
+        'uid': userCredential.user?.uid,
+        'email': _usernameController.text,
+        'createdAt': Timestamp.now(),
+      });
+
+      // Navigate to the login screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -34,27 +44,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _showError('Error: $e');
     }
   }
-
-  // Future<void> _register() async {
-  //   final url = Uri.parse('http://10.0.2.2:8080/api/v1/auth/registration');
-  //   final response = await http.post(
-  //     url,
-  //     headers: {"Content-Type": "application/json"},
-  //     body: jsonEncode({
-  //       "username": _usernameController.text,
-  //       "password": _passwordController.text,
-  //     }),
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => LoginScreen()),
-  //     );
-  //   } else {
-  //     _showError("Registration failed");
-  //   }
-  // }
 
   void _showError(String message) {
     showDialog(

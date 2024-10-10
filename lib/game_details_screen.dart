@@ -52,6 +52,8 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
             Image.network(
               _gameDetails!['info']['thumb'],
               height: 200,
+              width: double.infinity,  // Makes the image take the full available width
+              fit: BoxFit.cover,  // Ensures the image covers the available space while maintaining the aspect ratio
             ),
             SizedBox(height: 10),
             Text(

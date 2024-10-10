@@ -20,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _usernameController.text,
         password: _passwordController.text,
       );
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

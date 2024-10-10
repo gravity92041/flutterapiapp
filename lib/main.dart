@@ -32,32 +32,7 @@ class GameSearchApp extends StatelessWidget {
       ),
     );
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //   return StreamBuilder<User?>(
-  //     stream: FirebaseAuth.instance.authStateChanges(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return CircularProgressIndicator();
-  //       } else if (snapshot.hasData) {
-  //         return GameSearchScreen();
-  //       } else {
-  //         return LoginScreen();
-  //       }
-  //     },
-  //   );
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //
-  //   return MaterialApp(
-  //     title: 'Game Search',
-  //     theme: ThemeData(
-  //       primarySwatch: Colors.blue,
-  //     ),
-  //     home: LoginScreen(),
-  //   );
-  // }
 
 class GameSearchScreen extends StatefulWidget {
   @override
@@ -81,12 +56,26 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
       throw Exception('Failed to load games');
     }
   }
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    // Переход на экран авторизации после выхода
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Game Search'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout), // Иконка выхода
+            onPressed: _signOut, // Выход из аккаунта
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
