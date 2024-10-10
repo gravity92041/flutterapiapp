@@ -1,29 +1,63 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapiapp/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'game_details_screen.dart'; // Импортируем экран с деталями
-import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(GameSearchApp());
 
 }
 
 class GameSearchApp extends StatelessWidget {
-  ;
   @override
   Widget build(BuildContext context) {
-
-    return MaterialApp(
-      title: 'Game Search',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MaterialApp( // Ensure this is here
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasData) {
+            return GameSearchScreen();
+          } else {
+            return LoginScreen();
+          }
+        },
       ),
-      home: LoginScreen(),
     );
   }
-}
+  // @override
+  // Widget build(BuildContext context) {
+  //   return StreamBuilder<User?>(
+  //     stream: FirebaseAuth.instance.authStateChanges(),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return CircularProgressIndicator();
+  //       } else if (snapshot.hasData) {
+  //         return GameSearchScreen();
+  //       } else {
+  //         return LoginScreen();
+  //       }
+  //     },
+  //   );
+  }
+  // @override
+  // Widget build(BuildContext context) {
+  //
+  //   return MaterialApp(
+  //     title: 'Game Search',
+  //     theme: ThemeData(
+  //       primarySwatch: Colors.blue,
+  //     ),
+  //     home: LoginScreen(),
+  //   );
+  // }
 
 class GameSearchScreen extends StatefulWidget {
   @override

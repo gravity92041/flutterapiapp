@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "137757728840",
+    "project_id": "fluttterapi",
+    "storage_bucket": "fluttterapi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137757728840:android:00fc1dd625c4483c95b87d",
+        "android_client_info": {
+          "package_name": "com.example.flutterapiapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSGOxbZ_tlhBU0TrEqBUS3h6h9QODkwuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
