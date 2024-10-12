@@ -36,9 +36,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        _showError('The password provided is too weak.');
+        _showError('Выбранный пароль слишком слабый.');
       } else if (e.code == 'email-already-in-use') {
-        _showError('An account already exists for that email.');
+        _showError('Уже существует пользователь с такой почтой.');
       }
     } catch (e) {
       _showError('Error: $e');
@@ -91,7 +91,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
-                        labelText: 'Username',
+                        labelText: 'Почта',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -99,7 +99,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'Пароль',
                         border: OutlineInputBorder(),
                       ),
                       obscureText: true,
@@ -107,7 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(height: 20), // Отступ перед кнопкой
                     ElevatedButton(
                       onPressed: _register,
-                      child: Text('Register'),
+                      child: Text('Регистрация'),
                     ),
                   ],
                 ),

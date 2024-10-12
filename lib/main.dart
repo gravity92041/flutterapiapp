@@ -108,7 +108,7 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Game Search'),
+        title: Text('Поиск игр'),
         actions: [
           IconButton(
             icon: Icon(Icons.favorite), // Иконка избранного
@@ -131,7 +131,7 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
           children: [
             TextField(
               decoration: InputDecoration(
-                labelText: 'Search for a game',
+                labelText: 'Поиск игр',
                 border: OutlineInputBorder(),
               ),
               onSubmitted: (value) {

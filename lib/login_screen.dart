@@ -28,9 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        _showError('No user found for that email.');
+        _showError('Нет пользователя с такой почтой.');
       } else if (e.code == 'wrong-password') {
-        _showError('Wrong password provided.');
+        _showError('Неправильный пароль.');
       }
     } catch (e) {
       _showError('Error: $e');
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: Text('Ошибка'),
         content: Text(message),
         actions: [
           TextButton(
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextField(
                       controller: _usernameController,
                       decoration: InputDecoration(
-                        labelText: 'Username',
+                        labelText: 'Почта',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'Пароль',
                         border: OutlineInputBorder(),
                       ),
                       obscureText: true,
@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 20), // Отступ перед кнопкой
                     ElevatedButton(
                       onPressed: _login,
-                      child: Text('Login'),
+                      child: Text('Авторизация'),
                     ),
                     SizedBox(height: 10), // Отступ между кнопками
                     ElevatedButton(
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           MaterialPageRoute(builder: (context) => RegistrationScreen()),
                         );
                       },
-                      child: Text('Register'),
+                      child: Text('Регистрация'),
                     ),
                   ],
                 ),
