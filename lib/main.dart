@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutterapiapp/login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Для работы с Firestore
-import 'game_details_screen.dart'; // Экран с деталями игры
-import 'favourites_screen.dart'; // Экран с избранным
-import 'cart_screen.dart'; // Экран корзины
-import 'library_screen.dart'; // Экран библиотеки
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'game_details_screen.dart';
+import 'favourites_screen.dart';
+import 'cart_screen.dart';
+import 'library_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,10 +46,10 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
   List<dynamic> _games = [];
   String _query = '';
 
-  // Получаем текущего пользователя
+
   User? get currentUser => FirebaseAuth.instance.currentUser;
 
-  // Поиск игр
+
   Future<void> _searchGames(String query) async {
     final url = Uri.parse('https://www.cheapshark.com/api/1.0/games?title=$query');
     final response = await http.get(url);
@@ -64,7 +64,7 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
     }
   }
 
-  // Проверяем, находится ли игра в библиотеке
+
   Future<bool> _isInLibrary(String gameId) async {
     final userId = currentUser?.uid;
     if (userId == null) return false;
@@ -79,7 +79,7 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
     return libraryDoc.exists;
   }
 
-  // Проверяем, находится ли игра в корзине
+
   Future<bool> _isInCart(String gameId) async {
     final userId = currentUser?.uid;
     if (userId == null) return false;
@@ -94,7 +94,6 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
     return cartDoc.exists;
   }
 
-  // Добавление/удаление игры в корзину
   Future<void> _toggleCart(String gameId, Map<String, dynamic> gameData) async {
     final userId = currentUser?.uid;
     if (userId == null) return;
@@ -104,17 +103,17 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
     final docSnapshot = await cartDoc.get();
 
     if (docSnapshot.exists) {
-      // Если игра уже в корзине, удаляем
+
       await cartDoc.delete();
     } else {
-      // Если игры нет в корзине, добавляем
+
       await cartDoc.set(gameData);
     }
 
-    setState(() {}); // Обновляем состояние для перерисовки списка
+    setState(() {});
   }
 
-  // Добавление/удаление игры в избранное
+
   Future<void> _toggleFavorite(String gameId, Map<String, dynamic> gameData) async {
     final userId = currentUser?.uid;
     if (userId == null) return;
@@ -124,17 +123,17 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
     final docSnapshot = await favoriteDoc.get();
 
     if (docSnapshot.exists) {
-      // Если игра уже в избранном, удаляем
+
       await favoriteDoc.delete();
     } else {
-      // Если игры нет в избранном, добавляем
+
       await favoriteDoc.set(gameData);
     }
 
-    setState(() {}); // Обновляем состояние для перерисовки списка
+    setState(() {});
   }
 
-  // Проверяем, находится ли игра в избранном
+
   Future<bool> _isFavorite(String gameId) async {
     final userId = currentUser?.uid;
     if (userId == null) return false;
@@ -164,7 +163,7 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
         title: Text('Поиск игр'),
         actions: [
           IconButton(
-            icon: Icon(Icons.library_books), // Иконка библиотеки
+            icon: Icon(Icons.library_books),
             onPressed: () {
               Navigator.push(
                 context,
@@ -173,7 +172,7 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.shopping_cart), // Иконка корзины
+            icon: Icon(Icons.shopping_cart),
             onPressed: () {
               Navigator.push(
                 context,
@@ -251,27 +250,33 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
 
                       if (isInLibrary) {
                         // Если игра в библиотеке
-                        return ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              game['thumb'],
-                              width: 100,
-                              height: 60,
-                              fit: BoxFit.cover,
-                              color: Colors.grey, // Серая картинка для купленных игр
-                              colorBlendMode: BlendMode.saturation,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0), // Добавление отступов между карточками
+                          child: Card(
+                            elevation: 3, // Добавляем приподнятую поверхность
+                            child: ListTile(
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Image.network(
+                                  game['thumb'],
+                                  width: 100,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                  color: Colors.grey, // Серая картинка для купленных игр
+                                  colorBlendMode: BlendMode.saturation,
+                                ),
+                              ),
+                              title: Text(
+                                game['external'],
+                                style: TextStyle(color: Colors.grey), // Серый текст для купленных игр
+                              ),
+                              subtitle: Text(
+                                'Куплено',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              trailing: Icon(Icons.check, color: Colors.green), // Иконка купленной игры
                             ),
                           ),
-                          title: Text(
-                            game['external'],
-                            style: TextStyle(color: Colors.grey), // Серый текст для купленных игр
-                          ),
-                          subtitle: Text(
-                            'Куплено',
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          trailing: Icon(Icons.check, color: Colors.green), // Иконка купленной игры
                         );
                       } else {
                         return FutureBuilder<bool>(
@@ -282,51 +287,57 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
                               future: _isInCart(gameId),
                               builder: (context, cartSnapshot) {
                                 final isInCart = cartSnapshot.data ?? false;
-                                return ListTile(
-                                  leading: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      game['thumb'],
-                                      width: 100,
-                                      height: 60,
-                                      fit: BoxFit.cover,
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 5.0), // Добавление отступов
+                                  child: Card(
+                                    elevation: 3, // Приподнятая карточка
+                                    child: ListTile(
+                                      leading: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          game['thumb'],
+                                          width: 100,
+                                          height: 60,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      title: Text(game['external']),
+                                      subtitle: Text('Cheapest Price: \$${game['cheapest']}'),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(
+                                              isInCart ? Icons.shopping_cart : Icons.add_shopping_cart, // Иконка корзины
+                                              color: isInCart ? Colors.green : Colors.grey,
+                                            ),
+                                            onPressed: isInCart
+                                                ? null
+                                                : () {
+                                              _toggleCart(gameId, game); // Добавление/удаление из корзины
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              isFavorite ? Icons.favorite : Icons.favorite_border, // Звездочка
+                                              color: isFavorite ? Colors.yellow : Colors.grey,
+                                            ),
+                                            onPressed: () {
+                                              _toggleFavorite(gameId, game); // Добавление/удаление из избранного
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => GameDetailsScreen(gameId: gameId),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
-                                  title: Text(game['external']),
-                                  subtitle: Text('Cheapest Price: \$${game['cheapest']}'),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(
-                                          isInCart ? Icons.shopping_cart : Icons.add_shopping_cart, // Иконка корзины
-                                          color: isInCart ? Colors.green : Colors.grey,
-                                        ),
-                                        onPressed: isInCart
-                                            ? null
-                                            : () {
-                                          _toggleCart(gameId, game); // Добавление/удаление из корзины
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          isFavorite ? Icons.favorite : Icons.favorite_border, // Звездочка
-                                          color: isFavorite ? Colors.yellow : Colors.grey,
-                                        ),
-                                        onPressed: () {
-                                          _toggleFavorite(gameId, game); // Добавление/удаление из избранного
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => GameDetailsScreen(gameId: gameId),
-                                      ),
-                                    );
-                                  },
                                 );
                               },
                             );
@@ -338,6 +349,7 @@ class _GameSearchScreenState extends State<GameSearchScreen> {
                 },
               ),
             ),
+
           ],
         ),
       ),

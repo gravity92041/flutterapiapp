@@ -60,23 +60,29 @@ class _CartScreenState extends State<CartScreen> {
                     final game = cartItems[index];
                     final gameId = game['gameID'];
 
-                    return ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          game['thumb'],
-                          width: 100,
-                          height: 60,
-                          fit: BoxFit.cover,
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0), // Добавляем отступы между карточками
+                      child: Card(
+                        elevation: 3, // Добавляем эффект приподнятой поверхности
+                        child: ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              game['thumb'],
+                              width: 100,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          title: Text(game['external']),
+                          subtitle: Text('Price: \$${game['cheapest']}'),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              _removeFromCart(gameId);
+                            },
+                          ),
                         ),
-                      ),
-                      title: Text(game['external']),
-                      subtitle: Text('Price: \$${game['cheapest']}'),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          _removeFromCart(gameId);
-                        },
                       ),
                     );
                   },

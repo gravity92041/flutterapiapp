@@ -21,13 +21,16 @@ class FavoritesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid;
 
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Избранное'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('users').doc(userId).collection('favorites').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('favorites')
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -45,53 +48,59 @@ class FavoritesScreen extends StatelessWidget {
               final game = favoriteGames[index].data() as Map<String, dynamic>;
               final gameId = favoriteGames[index].id; // Получаем ID игры
 
-              return ListTile(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    game['thumb'],
-                    width: 100,
-                    height: 60,
-                    fit: BoxFit.cover,
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0), // Добавляем отступы между карточками
+                child: Card(
+                  elevation: 3, // Добавляем приподнятую поверхность
+                  child: ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        game['thumb'],
+                        width: 100,
+                        height: 60,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    title: Text(game['external']),
+                    subtitle: Text('Cheapest Price: \$${game['cheapest']}'),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red), // Иконка удаления
+                      onPressed: () {
+                        // Подтверждение перед удалением
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Удалить из избранного'),
+                            content: Text('Вы уверены, что хотите удалить эту игру из избранного?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context), // Закрыть диалог
+                                child: Text('Отмена'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _removeFavorite(gameId); // Удаляем игру
+                                  Navigator.pop(context); // Закрыть диалог
+                                },
+                                child: Text('Удалить'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    onTap: () {
+                      // Переход на экран с подробностями об игре
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GameDetailsScreen(gameId: game['gameID']),
+                        ),
+                      );
+                    },
                   ),
                 ),
-                title: Text(game['external']),
-                subtitle: Text('Cheapest Price: \$${game['cheapest']}'),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red), // Иконка удаления
-                  onPressed: () {
-                    // Подтверждение перед удалением
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Удалить из избранного'),
-                        content: Text('Вы уверены что хотите удалить эту игру из избранного?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context), // Закрыть диалог
-                            child: Text('Отмена'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              _removeFavorite(gameId); // Удаляем игру
-                              Navigator.pop(context); // Закрыть диалог
-                            },
-                            child: Text('Удалить'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                onTap: () {
-                  // Переход на экран с подробностями об игре
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => GameDetailsScreen(gameId: game['gameID']),
-                    ),
-                  );
-                },
               );
             },
           );
